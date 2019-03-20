@@ -89,3 +89,25 @@ func decode(code_i, index_i int) (code_o, index_o int) {
 	index_o = index_i
 	return
 }
+
+func Decode(p []byte) (o []byte) {
+	var (
+		index int
+		code  int
+	)
+
+	for _, v := range p {
+		code1 := int(v & 0xF0 >> 4)
+		code2 := int(v & 0x0F)
+
+		code, index = decode(code1, index)
+		o = append(o, byte(code&0x00FF))
+		o = append(o, byte(code&0xFF00>>8))
+
+		code, index = decode(code2, index)
+		o = append(o, byte(code&0x00FF))
+		o = append(o, byte(code&0xFF00>>8))
+	}
+
+	return
+}
